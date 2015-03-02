@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSON"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/FILES"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AS2 PLATFORM COMMON"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AS2 PLATFORM SERVER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/hr.adriacomsoftware.app.server.services"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/hr.adriacomsoftware.resources.server"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/APP Common"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
