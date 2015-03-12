@@ -184,4 +184,22 @@ public final class PlaceFacadeServer {
     	value.set("korisnik", getUserName(value));
         return dao.daoPokreniObradu(value);
     }
+    //BUDUĆE RAZDOBLJE
+	public AS2RecordList dodajViseEvidencija(AS2Record value) {
+		PlaceEvidencijaJdbc dao = new PlaceEvidencijaJdbc();
+		value.set("korisnik", getUserName(value));
+		return dao.daoAddBuduceEvidencije(value);
+	}
+    public AS2Record azurirajBuduceRazdoblje(AS2Record value) {
+		PlaceEvidencijaJdbc dao = new PlaceEvidencijaJdbc();
+		value.set("vrijeme_izmjene", AS2Date.getCurrentDateTimeAsString());
+		value.set("korisnik", getUserName(value));
+		return dao.daoStore(value);
+	}
+	
+	public AS2RecordList procitajSveBuduceRazdoblje(AS2Record value) {
+		PlaceEvidencijaJdbc dao = new PlaceEvidencijaJdbc();
+		return dao.daoFindByRadnik(value);
+	}
+
 }

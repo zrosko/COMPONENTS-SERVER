@@ -164,6 +164,43 @@ public final class PlaceEvidencijaJdbc extends OLTPJdbc {
 	    } catch (Exception e) {
 			throw new AS2DataAccessException(e);
 		}
-	}  
+	} 
+    public AS2RecordList daoFindByRadnik(AS2Record value) {
+    	J2EESqlBuilder sql = new J2EESqlBuilder();
+    	sql.append("select id_dnevne_evidencije, element_obracuna_id, datum, korisnik "
+				 + " from dbo.view_place_evidencija "
+				 + " where radnik_id = ? and datum >= cast(GETDATE() as DATE) ");
+		int counter = 1;
+		try{
+			PreparedStatement pstmt = getConnection().getPreparedStatement(sql.toString());
+			pstmt.setObject(counter++,value.getProperty("radnik_id"));
+			pstmt.setMaxRows(0);
+			AS2RecordList as2_rs = transformResultSet(pstmt.executeQuery());
+			pstmt.close();
+			return as2_rs;
+	    } catch (Exception e) {
+			throw new AS2DataAccessException(e);
+		}
+	}
+    public AS2RecordList daoAddBuduceEvidencije(AS2Record value) {
+    	int counter = 1;
+		J2EESqlBuilder sp = new J2EESqlBuilder();
+		sp.append("{call ");
+		sp.append("stp_place_evidencija_radnik_unos_razdoblje");
+		sp.append(" (?,?,?,?,?) }");
+		try{
+			CallableStatement cs = getConnection().getCallableStatement(sp.toString());
+			cs.setObject(counter++,value.getProperty("radnik_id"));
+			cs.setObject(counter++,value.getProperty("element_obracuna_id"));
+			cs.setObject(counter++,value.getProperty("korisnik"));
+			cs.setObject(counter++,value.getProperty("datum_od"));
+			cs.setObject(counter++,value.getProperty("datum_do"));
+			AS2RecordList as2_rs = transformResultSet(cs.executeQuery());
+			cs.close();
+			return as2_rs;
+	    } catch (Exception e) {
+			throw new AS2DataAccessException(e);
+		}
+	} 
     
 }
