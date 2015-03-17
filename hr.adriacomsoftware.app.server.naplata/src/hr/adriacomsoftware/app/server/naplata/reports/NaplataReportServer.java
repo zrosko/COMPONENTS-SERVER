@@ -1,7 +1,9 @@
 package hr.adriacomsoftware.app.server.naplata.reports;
 
+import hr.adriacomsoftware.app.common.jb.dto.OsnovniVo;
 import hr.adriacomsoftware.app.common.naplata.dto.NaplataGrSspVo;
 import hr.adriacomsoftware.app.server.naplata.da.jdbc.NaplataGrSspJdbc;
+import hr.adriacomsoftware.app.server.naplata.da.jdbc.NaplataGrTekuciJdbc;
 import hr.as2.inf.common.core.AS2Context;
 import hr.as2.inf.common.data.AS2Record;
 import hr.as2.inf.common.data.AS2RecordList;
@@ -29,6 +31,18 @@ public final class NaplataReportServer extends AS2FacadeServerLayer {
 	}	
 	public byte[] izvjestajGrSspWord(AS2Record vo)  {
 		AS2RecordList podaci = new NaplataGrSspJdbc().daoIzvjestaji(new NaplataGrSspVo(vo));
+		AS2Record map = podaci.getRowAt(0);
+		if(map!=null)
+			map = map.changeKeys("${","}"); //key
+		else 
+			map = new AS2Record();
+		AS2WordDoc doc = new AS2WordDoc();
+		String fileName;// =  "C:\\AS2_ZR\\WS\\AS2 PLATFORM COMMON\\OVRHA.doc";
+		fileName = vo.get("fileLocation")+vo.get("fileName")+".doc";
+		return doc.generateWord(fileName, map);
+	}
+	public byte[] izvjestajiGrTekuciWord(AS2Record vo)  {
+		AS2RecordList podaci = new NaplataGrTekuciJdbc().daoIzvjestaji(new OsnovniVo(vo));
 		AS2Record map = podaci.getRowAt(0);
 		if(map!=null)
 			map = map.changeKeys("${","}"); //key
