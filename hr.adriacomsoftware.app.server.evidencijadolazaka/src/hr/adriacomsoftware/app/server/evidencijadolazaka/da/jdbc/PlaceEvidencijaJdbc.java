@@ -203,4 +203,6 @@ public final class PlaceEvidencijaJdbc extends OLTPJdbc {
 		}
 	} 
     
+    //TEST
+    
 }
