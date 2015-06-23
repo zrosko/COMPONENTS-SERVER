@@ -55,6 +55,38 @@ public final class PoZahZahtjevJdbc extends PoZahJdbc {
 			throw new AS2DataAccessException(e);
 		}
 	}
+	public ZahtjevPravnaOsobaRs daoPronadiZahtjeveSME(ZahtjevPravnaOsobaVo value, boolean pretrazivanje)  {
+		J2EESqlBuilder sql = new J2EESqlBuilder();
+		sql.appendln("select distinct Z.* from OLTP_PROD.dbo.po_zah_nadleznost N left join ");
+		sql.appendln("dbo.fn_tbl_po_zah_pogled() Z on N.maticni_broj = Z.maticni_broj ");
+		sql.appendln("where  isnull(N.datum_pocetak,'20000101')<= GETDATE() ");
+		sql.appendln("and isnull(N.datum_kraj,'29991231')>= GETDATE()");
+		sql.appendln("and N.nadleznost ='SME'");
+		/* Ograničavanje za sigurnosne razine (1,2,3) POČETAK */
+		sql = odrediRazinuOvlastiUkljucujuciPodrucje(sql);
+		/* ograničavanje za sigurnosne razine KRAJ */
+		if (value.get("@obrtnici").equals("1")) {
+			sql.appGreatherOrEqualNoQuote("AND", "maticni_broj", "90000000");
+		}
+		if (pretrazivanje) {
+			sql.appEqual("AND", "broj_zahtjeva", value.getBrojZahtjeva());
+			sql.appLike("AND", "naziv", value.getImePrezimeNaziv());
+			sql.appEqualNoQuote("AND", "maticni_broj", value.getMaticniBroj());
+			sql.appEqualNoQuote("AND", "oib", value.getOib());
+			sql.appIn("AND", "status_zahtjeva", value.getStatusZahtjeva());
+			sql.appIn("AND", "hitnost", value.get("@@Hitnost"));
+		}
+		sql.appendln(" ORDER BY datum_sort desc, broj_zahtjeva desc, status_zahtjeva");
+		try{
+			PreparedStatement pstmt = getConnection().getPreparedStatement(sql.toString());
+			pstmt.setMaxRows(0);
+			ZahtjevPravnaOsobaRs j2eers = new ZahtjevPravnaOsobaRs(transformResultSet(pstmt.executeQuery()));
+			pstmt.close();
+			return j2eers;
+		} catch (Exception e) {
+			throw new AS2DataAccessException(e);
+		}
+	}
 
 	public AS2RecordList daoSlijedeciBrojZahtjeva()  {
 		J2EESqlBuilder sql = new J2EESqlBuilder();

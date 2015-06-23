@@ -91,6 +91,13 @@ public final class KpiReportServer extends AS2FacadeServerLayer {
 				wb.setCurrentSheet("PC-Šibenik");
 				wb.fillSheetWithParameters("PC-Šibenik", vo);
 				wb.fillSheetWithData("PC-Šibenik", podaci);
+			}else if(profitniCentar.equals("22999")){
+				vo.set("profitni_centar", "Šibenik - SME");
+				wb.copySheet("JABA", "PC-Šibenik - SME");
+				wb.deleteSheet("JABA");
+				wb.setCurrentSheet("PC-Šibenik - SME");
+				wb.fillSheetWithParameters("PC-Šibenik - SME", vo);
+				wb.fillSheetWithData("PC-Šibenik - SME", podaci);
 			}else if(profitniCentar.equals("21000")){
 				vo.set("profitni_centar", "Split");
 				wb.copySheet("JABA", "PC-Split");

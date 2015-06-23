@@ -31,6 +31,25 @@ public final class KrTransakcijaJdbc extends RIZIKJdbc {
 			throw new AS2DataAccessException(e);
 		}
     }
+    public KrTransakcijaRs daoListaTransakcijaPremaNadleznosti(KrTransakcijaVo value)  {
+    	String vrsta = value.get("vrsta");
+    	if(value.get("vrsta").equals("SME"))
+    		vrsta = "Nadležnost - SME";
+        J2EESqlBuilder sql = new J2EESqlBuilder(); 
+        sql.appendln("select * from fn_tbs_kr_po_plasmani_prema_nadleznosti(?,?) ");
+        sql.appendln("order by izlozenost_bruto desc");
+        try{
+	        PreparedStatement pstmt = getConnection().getPreparedStatement(sql.toString());
+	        pstmt.setDate(1,value.getAsSqlDate("datum"));
+	        pstmt.setString(2,vrsta);
+	        pstmt.setMaxRows(0);
+	        KrTransakcijaRs j2eers = new KrTransakcijaRs(transformResultSet(pstmt.executeQuery()));
+	        pstmt.close();
+	        return j2eers;
+        } catch (Exception e) {
+			throw new AS2DataAccessException(e);
+		}
+    }
     public KrTransakcijaRs daoPronadiIzlozenosti(KrTransakcijaVo value, boolean pretrazivanje)  {
         J2EESqlBuilder sql = new J2EESqlBuilder(); 
         sql.appendln("select * from rizik_prod.dbo.view_kr_transakcija_pogled  ");

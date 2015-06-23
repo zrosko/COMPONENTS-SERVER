@@ -23,12 +23,10 @@ public final class ZahtjevObrtniciFacadeServer extends AS2FacadeServerLayer
 	}
     public ZahtjevPravnaOsobaRs pronadiSveZahtjeve(ZahtjevPravnaOsobaVo value)  {
         PoZahZahtjevJdbc dao = new PoZahZahtjevJdbc();
-        value.set("@obrtnici","1");//bilo sto u polju daje znak da cita samo obrtnike
-        return dao.daoPronadiZahtjeve(value, true);
+        return dao.daoPronadiZahtjeveSME(value, true);
     }
     public ZahtjevPravnaOsobaRs citajSveZahtjeve(ZahtjevPravnaOsobaVo value)  {
         PoZahZahtjevJdbc dao = new PoZahZahtjevJdbc();
-        value.set("@obrtnici","1");//bilo sto u polju daje znak da cita samo obrtnike
-        return dao.daoPronadiZahtjeve(value, false);
+        return dao.daoPronadiZahtjeveSME(value, false);
     }
  }

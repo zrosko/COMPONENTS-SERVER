@@ -223,4 +223,20 @@ public final class RocnostKreditaPravihOsobaJdbc extends BankarskiJdbc {
             throw ex;
         }
     }
+    public RocnostRs daoListaRocnostiNadleznost(RocnostVo value)  {
+        J2EESqlBuilder sql = new J2EESqlBuilder();
+        sql.append("select * from OLTP_PROD.dbo.fn_tbs_krediti_rocnost_nadleznost(?,?) ");
+        sql.append("ORDER BY preko_365, od_181_do_365, od_151_do_180, od_121_do_150, od_91_do_120, od_61_do_90, od_31_do_60, do_30_dana");
+        try{
+        	PreparedStatement pstmt = getConnection().getPreparedStatement(sql.toString());
+	        pstmt.setMaxRows(0);
+	        RocnostRs j2eers = new RocnostRs(transformResultSet(pstmt.executeQuery()));
+	        pstmt.setDate(1, value.getAsSqlDate(JBDataDictionary.BI_ROCNOST__DATUM));
+            pstmt.setString(2,value.get("@profitni_centar"));
+	        pstmt.close();
+	        return j2eers;
+        } catch (Exception e) {
+			throw new AS2DataAccessException(e);
+		}
+    }
 }

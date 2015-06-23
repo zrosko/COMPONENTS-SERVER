@@ -216,4 +216,8 @@ public final class PravnaOsobaFacadeServer extends AS2FacadeServerLayer
         PravnaOsobaJdbc dao = new PravnaOsobaJdbc();
         return dao.daoPrometPravneOsobe(value);
     }
+    public PravnaOsobaRs citajPravneOsobePremaNadleznosti(PravnaOsobaVo value) {
+        PravnaOsobaJdbc dao = new PravnaOsobaJdbc();
+        return dao.daoPronadiPremaNadleznosti(value);
+    }
 }

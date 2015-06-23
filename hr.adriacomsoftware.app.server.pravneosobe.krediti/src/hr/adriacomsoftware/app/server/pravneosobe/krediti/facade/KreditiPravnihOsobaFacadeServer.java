@@ -89,7 +89,10 @@ public final class KreditiPravnihOsobaFacadeServer extends AS2FacadeServerLayer
 	public RocnostRs izvjestajRocnostiOtplateKomitent(RocnostVo value) {
 		RocnostRs rs = new RocnostRs();
 		RocnostKreditaPravihOsobaJdbc dao = new RocnostKreditaPravihOsobaJdbc();
-		rs = new RocnostRs(dao.daoListaRocnostiKomitent(value));
+		if(value.get("kontekst").equals("nadleznost"))
+	    	rs = dao.daoListaRocnostiNadleznost(value);
+	    else
+	    	rs = dao.daoListaRocnostiKomitent(value);
 		return rs;
 	}
 

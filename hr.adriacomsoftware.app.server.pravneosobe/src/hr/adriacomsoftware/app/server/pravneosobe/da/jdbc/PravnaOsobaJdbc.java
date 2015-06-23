@@ -125,4 +125,28 @@ public final class PravnaOsobaJdbc extends BankarskiJdbc {
 			throw new AS2DataAccessException(e);
 		}
     }
+    public PravnaOsobaRs daoPronadiPremaNadleznosti(PravnaOsobaVo value)  {
+        J2EESqlBuilder sql = new J2EESqlBuilder(); 
+        sql.appendln("OS.maticni_broj, OS.naziv, OS.mjesto, OS.telefon, OS.godina_pocetka_poslovanja, OS.ocjena_ukupna, ");
+		sql.append("CONVERT(char(15), CONVERT(decimal(15, 0), OS.oib)) AS oib ");
+        sql.appendln("FROM BI_PROD.dbo.bi_po_pravna_osoba OS right join ");
+        sql.appendln("OLTP_PROD.dbo.po_zah_nadleznost NA ON NA.maticni_broj = OS.maticni_broj ");
+
+        sql.appLike("AND", "naziv", value.getImePrezime()); //ime prezime znaci naziv
+        sql.appEqualNoQuote("AND", "maticni_broj", value.getJmbg()); //jmbg se korisni u modelu a znaci MB
+        sql.appEqualNoQuote("AND", "oib", value.getOib());
+        /* Ograničavanje za sigurnosne razine (1,2,3) POČETAK */
+        sql = odrediRazinuOvlastiSamoZaPodrucje(sql);
+        /*ograničavanje za sigurnosne razine KRAJ*/
+        sql.appendln("ORDER BY naziv");
+        try{
+        	PreparedStatement pstmt = getConnection().getPreparedStatement(sql.toString());
+	        pstmt.setMaxRows(0);
+	        PravnaOsobaRs as2_rs = new PravnaOsobaRs(transformResultSet(pstmt.executeQuery()));
+	        pstmt.close();
+	        return as2_rs;
+	    } catch (Exception e) {
+			throw new AS2DataAccessException(e);
+		}
+    }
 }

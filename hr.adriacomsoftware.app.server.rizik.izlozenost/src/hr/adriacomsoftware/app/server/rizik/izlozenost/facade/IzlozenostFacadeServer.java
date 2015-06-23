@@ -28,7 +28,10 @@ public final class IzlozenostFacadeServer extends AS2FacadeServerLayer
 
     public KrTransakcijaRs procitajIzlozenosti(KrTransakcijaVo value)  {
         KrTransakcijaJdbc dao = new KrTransakcijaJdbc();
-        return dao.daoListaTransakcija(value);
+        if(value.exists("vrsta"))
+        	return dao.daoListaTransakcijaPremaNadleznosti(value);
+        else
+        	return dao.daoListaTransakcija(value);
     }
     public KrTransakcijaRs pronadiIzlozenosti(KrTransakcijaVo value)  {
         KrTransakcijaJdbc dao = new KrTransakcijaJdbc();

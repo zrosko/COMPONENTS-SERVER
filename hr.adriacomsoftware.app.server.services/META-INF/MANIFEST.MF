@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Services
+Bundle-SymbolicName: hr.adriacomsoftware.app.server.services
+Bundle-Version: 1.0.0.qualifier
+Export-Package: hr.adriacomsoftware.app.server.services,
+ hr.adriacomsoftware.app.server.services.da.jdbc,
+ hr.adriacomsoftware.app.server.services.da.odbc
