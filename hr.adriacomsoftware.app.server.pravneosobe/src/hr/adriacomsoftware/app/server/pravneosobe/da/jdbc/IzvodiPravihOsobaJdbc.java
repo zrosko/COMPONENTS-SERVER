@@ -4,8 +4,10 @@ import hr.adriacomsoftware.app.common.datadictionary.JBDataDictionary;
 import hr.adriacomsoftware.app.common.pravneosobe.dto.IzvodRs;
 import hr.adriacomsoftware.app.common.pravneosobe.dto.IzvodVo;
 import hr.adriacomsoftware.app.server.services.da.jdbc.BankarskiJdbc;
+import hr.as2.inf.common.core.AS2Constants;
 import hr.as2.inf.common.data.AS2RecordList;
 import hr.as2.inf.common.exceptions.AS2DataAccessException;
+import hr.as2.inf.common.security.user.AS2User;
 import hr.as2.inf.server.da.jdbc.J2EESqlBuilder;
 
 import java.sql.CallableStatement;
@@ -31,6 +33,14 @@ public final class IzvodiPravihOsobaJdbc extends BankarskiJdbc {
             /* Ograničavanje za sigurnosne razine (1,2,3) POČETAK */
             sql = odrediRazinuOvlasti(sql);
             /*ograničavanje za sigurnosne razine KRAJ*/
+            AS2User _user = (AS2User)value.getProperty(AS2Constants.USER_OBJ);
+            String _korisnik = _user.get("korisnik");
+            //23.6.2015. Operateri kod ispisa ne vide izvode za klijente kojima se ne šalju izvodi
+            //međutim, ostali zbog čuvanja izvoda u PDF obliku pema zahtejvu HD 49174 vide sve izvode
+            //za razlikovanje koristimo kolonu "ispravno" u tabeli "bi_izvjestaj_po_izvod"
+            if(_korisnik.equals("aklaric")||_korisnik.equals("rmandic")||_korisnik.equals("tkrncevic")){//OPERATERI
+            	sql.appendln(" AND isnull(ispravno,1) = 1 ");
+            }
             sql.appendln(" order by maticni_broj, broj_partije,broj_konta, datum_knjizenja, redni_broj_stavke ");  
 		}else if(value.getAkcija().equals("Priprema")){
 		    daoCallStoredProcedureIzvodiKrediti(value);
